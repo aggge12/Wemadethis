@@ -94,14 +94,14 @@ public class player_movement : MonoBehaviour
         }
 
         // set animations last
-        anim.SetBool("walk", move.x != 0 & grounded == true);
+        anim.SetBool("walk", move.x != 0);
 /*         anim.SetBool("grounded", grounded); */
 
     }
 
     public void GetMovementDirection()
     {
-        
+
     }
     private void SetDirection(float horizontalinput){
         if (horizontalinput > 0) transform.localScale = Vector3.one;
@@ -140,7 +140,7 @@ public class player_movement : MonoBehaviour
         }
     } 
 
-    private void OnTriggerStay2D(Collider2D collision){
+/*     private void OnTriggerStay2D(Collider2D collision){
         if(collision.gameObject.tag == "ground"){
             grounded = true;
         }
@@ -150,5 +150,5 @@ public class player_movement : MonoBehaviour
         if(collision.gameObject.tag == "ground"){
             grounded = false;
         }
-    }
+    } */
 }
