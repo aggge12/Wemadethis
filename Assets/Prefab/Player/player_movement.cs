@@ -67,14 +67,14 @@ public class player_movement : MonoBehaviour
     }
 
     private void Update(){
-        Vector3 temp = joystick.transform.localPosition;
-        temp.x = joystickX + move.x * 12;
-        temp.y = joystickY + move.y * 12;
-        joystick.transform.localPosition = temp;
+        //Vector3 temp = joystick.transform.localPosition;
+        //temp.x = joystickX + move.x * 12;
+        //temp.y = joystickY + move.y * 12;
+        //joystick.transform.localPosition = temp;
 
 
         SetDirection(move.x);
-        body.velocity = new Vector2(move.x * speed, body.velocity.y);
+        //body.velocity = new Vector2(move.x * speed, body.velocity.y);
 
 /*         // rotate if jumping
         angleofjump = Mathf.Atan(body.velocity.y/body.velocity.x)*180/Mathf.PI;
