@@ -13,6 +13,8 @@ public class player_movement : MonoBehaviour
     private Animator anim;
     public GameObject child;
     PlayerControls controls;
+
+    Vector3 direction;
     Vector2 move;
     Vector2 aim; //mousepad and right joystick vector
     public InputControl control { get; } //tried detecting if gamepad...
@@ -101,8 +103,40 @@ public class player_movement : MonoBehaviour
 
     public void GetMovementDirection()
     {
-
+        if (move.x < 0)
+        {
+            if (move.y > 0)
+            {
+                direction = new Vector3(-0.5f, 0.5f);
+            }
+            else if (move.y < 0)
+            {
+                direction = new Vector3(-0.5f, -0.5f);
+            }
+            else
+            {
+                direction = new Vector3(-1, 0, 0);
+            }
+            transform.position += direction;
+        }
+        else if (move.x > 0)
+        {
+            if (move.y > 0)
+            {
+                direction = new Vector3(0.5f, 0.5f);
+            }
+            else if (move.y < 0)
+            {
+                direction = new Vector3(0.5f, -0.5f);
+            }
+            else
+            {
+                direction = new Vector3(1, 0, 0);
+            }
+            transform.position += direction;
+        }
     }
+
     private void SetDirection(float horizontalinput){
         if (horizontalinput > 0) transform.localScale = Vector3.one;
         else if (horizontalinput < 0) transform.localScale = new Vector3(-1,1,1);
