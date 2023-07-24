@@ -35,6 +35,24 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Here"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""daadd7ad-bc89-4a4d-b6d3-b1dc02dd92fe"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Go"",
+                    ""type"": ""Button"",
+                    ""id"": ""b4a39ed5-0924-404b-bb3f-63016b10d099"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -103,6 +121,28 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""action"": ""Movement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""30bd52ec-a847-4b2d-af9b-7c2548bad7c0"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Here"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f3d8b7df-1a89-40bb-b42a-ef1ec3450197"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Go"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -112,6 +152,8 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         // Player
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Movement = m_Player.FindAction("Movement", throwIfNotFound: true);
+        m_Player_Here = m_Player.FindAction("Here", throwIfNotFound: true);
+        m_Player_Go = m_Player.FindAction("Go", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -174,11 +216,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Player;
     private List<IPlayerActions> m_PlayerActionsCallbackInterfaces = new List<IPlayerActions>();
     private readonly InputAction m_Player_Movement;
+    private readonly InputAction m_Player_Here;
+    private readonly InputAction m_Player_Go;
     public struct PlayerActions
     {
         private @PlayerControls m_Wrapper;
         public PlayerActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @Movement => m_Wrapper.m_Player_Movement;
+        public InputAction @Here => m_Wrapper.m_Player_Here;
+        public InputAction @Go => m_Wrapper.m_Player_Go;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -191,6 +237,12 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Movement.started += instance.OnMovement;
             @Movement.performed += instance.OnMovement;
             @Movement.canceled += instance.OnMovement;
+            @Here.started += instance.OnHere;
+            @Here.performed += instance.OnHere;
+            @Here.canceled += instance.OnHere;
+            @Go.started += instance.OnGo;
+            @Go.performed += instance.OnGo;
+            @Go.canceled += instance.OnGo;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -198,6 +250,12 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Movement.started -= instance.OnMovement;
             @Movement.performed -= instance.OnMovement;
             @Movement.canceled -= instance.OnMovement;
+            @Here.started -= instance.OnHere;
+            @Here.performed -= instance.OnHere;
+            @Here.canceled -= instance.OnHere;
+            @Go.started -= instance.OnGo;
+            @Go.performed -= instance.OnGo;
+            @Go.canceled -= instance.OnGo;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -218,5 +276,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     public interface IPlayerActions
     {
         void OnMovement(InputAction.CallbackContext context);
+        void OnHere(InputAction.CallbackContext context);
+        void OnGo(InputAction.CallbackContext context);
     }
 }

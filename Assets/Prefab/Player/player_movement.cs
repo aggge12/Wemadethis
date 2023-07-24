@@ -95,8 +95,9 @@ public class player_movement : MonoBehaviour
         GetMovementDirection();
         }
 
+/*         Debug.Log(transform.position); //checking position of the player */
         // set animations last
-        anim.SetBool("walk", move.x != 0);
+        anim.SetBool("walk", hasMoved);
 /*         anim.SetBool("grounded", grounded); */
 
     }
