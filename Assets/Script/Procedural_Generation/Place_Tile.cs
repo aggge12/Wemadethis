@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Tilemaps;
 using UnityEngine;
+using System.Linq;
 
 
 public class Place_Tile : MonoBehaviour
@@ -17,6 +18,8 @@ public class Place_Tile : MonoBehaviour
 
     [Header("Noise Textures")]
     public Texture2D miniMap;
+    public Vector2 spawn;
+    public Vector2 origin;
     public float edge = 0.3f;
     public Texture2D foundation;
     public float foundationRarity = 0.015f;
@@ -82,6 +85,11 @@ public class Place_Tile : MonoBehaviour
         float p1;
         float p2;
         float px;
+        float gpx = 0.5f;
+        Vector2 poi = new Vector2(worldSize,worldSize);
+        spawn = new Vector2(worldSize/2, worldSize/2);
+        origin = new Vector2(worldSize/2, worldSize/2);
+
         for (int y = 0; y <= worldSize/2; y++)
         {
             for (int x = 0; x <= worldSize; x++)
@@ -100,10 +108,44 @@ public class Place_Tile : MonoBehaviour
                     miniMap.SetPixel(x, y, new Color(0f, 0f, 0f));
                     miniMap.SetPixel(worldSize-x, worldSize-y, new Color(0f, 0f, 0f));
                 }
-
+                if (px >= gpx && Vector2.Distance(new Vector2(x,y), origin) > Vector2.Distance(spawn, origin)){
+                    gpx = px;
+                    spawn = new Vector2(x,y);
+                }
             }
         }
+        for (int y = (int)spawn.y - 5; y <= (int)spawn.y + 5; y++){
+            for (int x = (int)spawn.x - 5; x <= (int)spawn.x + 5; x++){
+                if (Vector2.Distance(new Vector2(x,y), spawn) <= 5){
+                    miniMap.SetPixel(x, y, new Color(1f, 1f, 0));
+                    miniMap.SetPixel(worldSize-x, worldSize-y, new Color(1f, 1f, 0));
+                }
+            }
+        }
+
+        Vector2 dir = (spawn - origin).normalized;
+        Vector2 start = origin;
+        Quaternion rotation = Quaternion.Euler(0, 0, 30);
+        Vector3 tempDir;
+        for (int i = 0; i < 5; i++){
+            tempDir = rotation * new Vector3(dir.x, dir.y, 0);
+            while (Vector2.Distance(start, origin) < worldSize/2){
+                dir = new Vector2(tempDir.x, tempDir.y).normalized;
+                start += dir;
+                if (miniMap.GetPixel(Mathf.RoundToInt(start.x), Mathf.RoundToInt(start.y)) != Color.black){
+                    miniMap.SetPixel(Mathf.RoundToInt(start.x), Mathf.RoundToInt(start.y), new Color(1f, 1f, 0));
+                }
+
+            }
+            start = origin;
+        }
+
+
         miniMap.Apply();
+    }
+
+    public void RoadMaker(Vector2 p1, Vector2 p2){
+        
     }
 
 
