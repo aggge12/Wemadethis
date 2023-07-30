@@ -127,16 +127,36 @@ public class Place_Tile : MonoBehaviour
         Vector2 start = origin;
         Quaternion rotation = Quaternion.Euler(0, 0, 30);
         Vector3 tempDir;
+        Vector2 point1 = Vector2.zero;
+        Vector2 point2 = Vector2.zero;
+        Vector2 bestPoint;
+        bool ready2Count = true;
         for (int i = 0; i < 5; i++){
             tempDir = rotation * new Vector3(dir.x, dir.y, 0);
+            float bestIsland = 1f;
+            bestPoint = Vector2.zero;
             while (Vector2.Distance(start, origin) < worldSize/2){
                 dir = new Vector2(tempDir.x, tempDir.y).normalized;
                 start += dir;
-                if (miniMap.GetPixel(Mathf.RoundToInt(start.x), Mathf.RoundToInt(start.y)) != Color.black){
+                if (miniMap.GetPixel(Mathf.RoundToInt(start.x), Mathf.RoundToInt(start.y)) != Color.black && ready2Count){
                     miniMap.SetPixel(Mathf.RoundToInt(start.x), Mathf.RoundToInt(start.y), new Color(1f, 1f, 0));
+                    point1 = new Vector2(start.x, start.y);
+                    ready2Count = false;
                 }
-
+                else if (miniMap.GetPixel(Mathf.RoundToInt(start.x), Mathf.RoundToInt(start.y)) == Color.black && !ready2Count){
+                    miniMap.SetPixel(Mathf.RoundToInt(start.x), Mathf.RoundToInt(start.y), new Color(1f, 1f, 0));
+                    point2 = new Vector2(start.x, start.y);
+                    ready2Count = true;
+                    if (Vector2.Distance(point2, point1) > bestIsland){
+                        bestIsland = Vector2.Distance(point2, point1);
+                        bestPoint = (point1 + point2)/2;
+                        Debug.Log(bestPoint.x);
+                        
+                    }
+                }
             }
+            Debug.Log($"distance is: {bestIsland}");
+            miniMap.SetPixel(Mathf.RoundToInt(bestPoint.x), Mathf.RoundToInt(bestPoint.y), new Color(1f, 0f, 0f));
             start = origin;
         }
 
@@ -144,8 +164,50 @@ public class Place_Tile : MonoBehaviour
         miniMap.Apply();
     }
 
-    public void RoadMaker(Vector2 p1, Vector2 p2){
-        
+    public void RoadMaker(){
+        float radius = Vector2.Distance(spawn, origin);
+        float angle = Vector2.Angle(spawn-origin, Vector2.left);
+        Vector2 circlePos = spawn;
+        Vector2 currentPos = spawn;
+        float currentAngle = 0f;
+        float frequency = 0.015f;
+        int x = 0;
+        for (int circleAngle = 0; circleAngle < 180; circleAngle++){
+                while (currentAngle < circleAngle){
+                    
+                    Mathf.PerlinNoise((x + seed) * frequency, (seed) * frequency);
+                    x++;
+                }
+        }
+
+    }
+
+    public void HexWorm(Vector2 prvs, Vector2 crnt, float Perlin, bool backTrack){
+        bool odd;
+        int step;
+        if (crnt.y%2 == 1){
+            odd = true;
+        } else {
+            odd = false;
+        }
+
+        if (backTrack){
+            step = Mathf.FloorToInt(Perlin * 5);
+        } else {
+            step = Mathf.FloorToInt(Perlin * 6);
+        }
+        switch (step)
+        {
+            case 0:
+                if (odd){
+                    
+                }
+                break;
+            case 1:
+                break;
+            default:
+                break;
+        }
     }
 
 
