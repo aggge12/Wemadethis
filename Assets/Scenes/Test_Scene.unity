@@ -194,6 +194,11 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: -45, y: 0, z: 0}
+--- !u!1 &520954683 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8816499632568661908, guid: 90c5a640141b99544a0f803bd36e3707, type: 3}
+  m_PrefabInstance: {fileID: 1198663005}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &702187658
 GameObject:
   m_ObjectHideFlags: 3
@@ -462,6 +467,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 8816499632568661908, guid: 90c5a640141b99544a0f803bd36e3707, type: 3}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 90c5a640141b99544a0f803bd36e3707, type: 3}
 --- !u!4 &1294874825 stripped
@@ -469,6 +478,22 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1545078433275488226, guid: 90c5a640141b99544a0f803bd36e3707, type: 3}
   m_PrefabInstance: {fileID: 1198663005}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1294874828
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 520954683}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5aa8b2566017c84db473b2150eaa63f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CurrentTile: {x: 0, y: 0}
+  NextTile: {x: 0, y: 0}
+  QueuedMovementTile: {x: 0, y: 0}
+  LinearInterpolation: {fileID: 0}
 --- !u!1 &1382268911
 GameObject:
   m_ObjectHideFlags: 0
@@ -479,6 +504,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1382268913}
   - component: {fileID: 1382268912}
+  - component: {fileID: 1382268914}
   m_Layer: 0
   m_Name: Grid
   m_TagString: Untagged
@@ -515,6 +541,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1382268914
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1382268911}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10e32f5f3a2b71c438dc6c68780f6ef3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1962017515
 GameObject:
   m_ObjectHideFlags: 0
@@ -795,6 +833,8 @@ MonoBehaviour:
   seed: 1028
   worldSize: 400
   miniMap: {fileID: 0}
+  spawn: {x: 0, y: 0}
+  origin: {x: 0, y: 0}
   edge: 0.3
   foundation: {fileID: 1117036676}
   foundationRarity: 0.015

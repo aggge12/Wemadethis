@@ -16,7 +16,7 @@ public class player_movement : MonoBehaviour
 
     Vector3 direction;
     Vector2 move;
-    Vector2 aim; //mousepad and right joystick vector
+    Vector2 here; //mousepad and right joystick vector
     public InputControl control { get; } //tried detecting if gamepad...
     public string currentControlScheme { get; }
     public InputAction action { get; }
@@ -38,24 +38,30 @@ public class player_movement : MonoBehaviour
     //player sprite pixels per unit
 /*     private int pixelsPerUnit = 24; */
     private player_stats player_Stats;
+
     // Setup get object
     private void Awake(){
         controls = new PlayerControls();
 
-        //different phases, started, performed, cancelled.
+        var moveComponent = GetComponent<Move>();
 
+        //different phases, started, performed, cancelled.
+ 
         //take the value of Movement and put it into the move object.
         controls.Player.Movement.performed += ctx => move = ctx.ReadValue<Vector2>();
         controls.Player.Movement.canceled += ctx => move = Vector2.zero;
 
-/*         controls.Player.Aim.performed += ctx => aim = ctx.ReadValue<Vector2>();
-        controls.Player.Aim.canceled += ctx => aim = Vector2.zero; */
+        controls.Player.Here.performed += ctx => ctx.ReadValue<Vector2>();
+        //controls.Player.Here.canceled += ctx => here = Vector2.zero;
+
+        controls.Player.Go.performed += ctx => moveComponent.SetNewDestination(here);
+        //controls.Player.Go.canceled += ctx => moveComponent.SetNewDestination(Vector2.zero);
 
         child = transform.GetChild(0).gameObject;
         
         // Grabbing references from objects
         body = GetComponent<Rigidbody2D>();
-        anim = child.GetComponent<Animator>();
+        anim = child.GetComponent<Animator>();;
 
 /*         joystick = GameObject.FindGameObjectsWithTag("joystick")[0];
         jump_button = GameObject.FindGameObjectsWithTag("jump_button")[0];
@@ -71,8 +77,6 @@ public class player_movement : MonoBehaviour
         //temp.x = joystickX + move.x * 12;
         //temp.y = joystickY + move.y * 12;
         //joystick.transform.localPosition = temp;
-
-
         SetDirection(move.x);
         //body.velocity = new Vector2(move.x * speed, body.velocity.y);
 
@@ -109,6 +113,7 @@ public class player_movement : MonoBehaviour
             if (move.y > 0)
             {
                 direction = new Vector3(-0.5f, 0.5f);
+
             }
             else if (move.y < 0)
             {

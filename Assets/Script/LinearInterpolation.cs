@@ -7,8 +7,9 @@ public class LinearInterpolation : MonoBehaviour
     private Vector2 start;
     private Vector2 end;
     private float startTime;
-    private float endTime;
-    private bool finished;
+    private bool finished = true;
+    private float journeyLength;
+    private float duration;
 
     public delegate void movementFinishedDelegate();
     public movementFinishedDelegate onFinish;
@@ -16,42 +17,31 @@ public class LinearInterpolation : MonoBehaviour
     public Vector2 velocity;
     public bool disabled;
 
-    void Start(){
-
-    }
-
-    void Update()
+    private void Start()
     {
-        if (!disabled){
-            if (Time.time < startTime + endTime){
-                //snabb början, långsam slut (sqrt(x))
-/*                 var time = Mathf.Sqrt(1/endTime * (Time.time - startTime));
-                transform.position = ((1-time) * start) + (time * end); */
+    }
 
-                //snabbare i början lånsammare i slutet (sqrt(1-1(x-1)^2)), Min favorit so far
-                var time = Mathf.Sqrt(1-Mathf.Pow((1/endTime * (Time.time - startTime))-1, 2));
-                transform.position = ((1-time) * start) + (time * end);
-
-                
-            } else if (!finished) {
+    private void Update()
+    {
+        if (!finished){
+            float fractionOfJourney = (Time.time - startTime) / duration;
+            transform.position = Vector2.Lerp(start, end, fractionOfJourney);
+        
+            if (Time.time >= duration + startTime){
                 finished = true;
-                if (onFinish != null){
-                    onFinish();
-                }
             }
+
+            Debug.Log("test");
         }
+ 
     }
 
-    public void Stop(bool x, bool y){
-
-    }
-
-    public void Set(Vector2 start, Vector2 end, float endTime, movementFinishedDelegate onFinish = null){
+    public void Set(Vector2 start, Vector2 end, float duration, movementFinishedDelegate onFinish = null){
         this.start = start;
         this.end = end;
         this.startTime = Time.time;
-        this.endTime = endTime;
         this.onFinish = onFinish;
-        finished = false;
+        this.duration = duration;
+        this.finished = false;
     }
 }
