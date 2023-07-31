@@ -3,7 +3,12 @@ guid: a66596ab94491c941b9ce84f753c69d8
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - earth_Tile: {fileID: 11400000, guid: a4cf83b08c95a3b43840e3f5f7c74599, type: 2}
+  - miniMap: {instanceID: 0}
+  - foundation: {instanceID: 0}
+  - biome: {instanceID: 0}
+  - testMap: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

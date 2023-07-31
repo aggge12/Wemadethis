@@ -104,6 +104,7 @@ public class Place_Tile : MonoBehaviour
                 if (px > 0.5f){
                     miniMap.SetPixel(x, y, new Color(0f, px, 0f));
                     miniMap.SetPixel(worldSize-x, worldSize-y, new Color(0f, px, 0f));
+                    PlaceTile(x, y, earth_Tile);
                 } else {
                     miniMap.SetPixel(x, y, new Color(0f, 0f, 0f));
                     miniMap.SetPixel(worldSize-x, worldSize-y, new Color(0f, 0f, 0f));
@@ -150,12 +151,12 @@ public class Place_Tile : MonoBehaviour
                     if (Vector2.Distance(point2, point1) > bestIsland){
                         bestIsland = Vector2.Distance(point2, point1);
                         bestPoint = (point1 + point2)/2;
-                        Debug.Log(bestPoint.x);
+/*                         Debug.Log(bestPoint.x); */
                         
                     }
                 }
             }
-            Debug.Log($"distance is: {bestIsland}");
+/*             Debug.Log($"distance is: {bestIsland}"); */
             miniMap.SetPixel(Mathf.RoundToInt(bestPoint.x), Mathf.RoundToInt(bestPoint.y), new Color(1f, 0f, 0f));
             start = origin;
         }
@@ -211,9 +212,13 @@ public class Place_Tile : MonoBehaviour
     }
 
 
-    public void PlaceTile(TileBase tileSprite, int x, int y)
+    public void PlaceTile(int x, int y, TileBase tileSprite)
     {
         Tilemap tilemap = GetComponent<Tilemap>();
-        tilemap.SetTile((new Vector3Int(x,y,0)), tileSprite);
+        tilemap.SetTile((new Vector3Int(x-worldSize/2,y-worldSize/2,0)), tileSprite);
+        tilemap.SetTile((new Vector3Int(worldSize/2-x,worldSize/2-y,0)), tileSprite);
+        Debug.Log($"this is x and y: {x}, {y}");
+        tilemap.SetTile((new Vector3Int(1,0,0)), tileSprite);
+
     }
 }
