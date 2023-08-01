@@ -217,7 +217,7 @@ public class Place_Tile : MonoBehaviour
         Tilemap tilemap = GetComponent<Tilemap>();
         tilemap.SetTile((new Vector3Int(x-worldSize/2,y-worldSize/2,0)), tileSprite);
         tilemap.SetTile((new Vector3Int(worldSize/2-x,worldSize/2-y,0)), tileSprite);
-        Debug.Log($"this is x and y: {x}, {y}");
+        //Debug.Log($"this is x and y: {x}, {y}");
         tilemap.SetTile((new Vector3Int(1,0,0)), tileSprite);
 
     }

@@ -1,16 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class GameEvents : MonoBehaviour
 {
     private float interval = 0.333f;
     private GameObject[] players;
+    private Pathfinding pathfinding;
 
     private void Start()
     {
+        pathfinding = gameObject.AddComponent<Pathfinding>();
         players = GameObject.FindGameObjectsWithTag("Player");
         InvokeRepeating("UpdateGameState", 1f, interval);
+        var tilemap = GetComponentInChildren<Tilemap>();
+        Debug.Log(tilemap);
+        pathfinding.InitializeGrid(tilemap);
     }
 
     // Update is called once per frame
@@ -28,6 +34,7 @@ public class GameEvents : MonoBehaviour
             var point =  ray.GetPoint(distance);
             Debug.Log("Hit");
             Debug.Log(point);
+
             return point;    
         }
 
@@ -41,15 +48,22 @@ public class GameEvents : MonoBehaviour
         {
             var component = player.GetComponent<Move>();
 
-            if (component != null && component.movementIsQueued)
+            if (component != null)
             {
-                Debug.Log(component.NextTile);
                 var grid = transform.GetComponent<Grid>();
-                var worldPosition = Camera.main.ScreenToWorldPoint(component.QueuedPosition);
-                var translatedPosition = TranslateMousePosition(worldPosition);
-                var cellPosition = grid.WorldToCell(translatedPosition);
-                var newPosition = grid.GetCellCenterWorld(cellPosition);
-                component.SetMovement(newPosition, 1);
+                if (component.movementIsQueued && component.Path.Count == 0){
+                    var worldPosition = Camera.main.ScreenToWorldPoint(component.QueuedPosition);
+                    var translatedPosition = TranslateMousePosition(worldPosition);
+                    var cellPosition = grid.WorldToCell(translatedPosition);
+                    var path = pathfinding.FindPath(component.CurrentTile, cellPosition);
+
+                    if (path.Count > 0){
+                        component.SetPath(path);
+                    }
+                }
+                if (component.Path.Count > 0){
+                    component.MoveToNextCell(grid, 1);
+                }
             }
             else
             {
