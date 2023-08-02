@@ -490,10 +490,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5aa8b2566017c84db473b2150eaa63f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CurrentTile: {x: 0, y: 0}
-  NextTile: {x: 0, y: 0}
-  QueuedMovementTile: {x: 0, y: 0}
+  CurrentTile: {x: 0, y: 0, z: 0}
+  NextTile: {x: 0, y: 0, z: 0}
   QueuedPosition: {x: 0, y: 0, z: 0}
+  Path: []
   LinearInterpolation: {fileID: 0}
   movementIsQueued: 0
 --- !u!1 &1382268911
@@ -847,10 +847,10 @@ MonoBehaviour:
   biomeRarity: 0.04
   biomeSize: 0.05
   humidity: {fileID: 0}
-  humidityRarity: 0.0076
+  humidityRarity: 0.0096
   humiditySize: 0
   temperature: {fileID: 0}
-  temperatureRarity: 0.0063
+  temperatureRarity: 0.0123
   temperatureSize: 0
   testMap: {fileID: 0}
   testRarity: 0.05

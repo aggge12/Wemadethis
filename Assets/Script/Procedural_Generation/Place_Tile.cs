@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Tilemaps;
 using UnityEngine;
+using System;
 using System.Linq;
 
 
@@ -44,7 +45,7 @@ public class Place_Tile : MonoBehaviour
         Vector3Int cellPosition = gridLayout.WorldToCell(transform.position);
         transform.position = gridLayout.CellToWorld(cellPosition);
 
-        seed = Random.Range(-10000, 10000);
+        seed = UnityEngine.Random.Range(-10000, 10000);
 
         miniMap = new Texture2D(worldSize, worldSize);
         foundation = new Texture2D(worldSize, worldSize);
@@ -175,15 +176,35 @@ public class Place_Tile : MonoBehaviour
     public void BiomeMaker(Texture2D temp, Texture2D humi, Texture2D bio){
         float tc = 0f;
         float hc = 0f;
+
+        var biomeDict = new Dictionary<Tuple<int, int>, Color>{
+            { Tuple.Create(2, 2), new Color(1f,0,0) }, //rainforest
+            { Tuple.Create(2, 1), new Color(0.75f,0.25f,0) }, //seasonal forest
+            { Tuple.Create(2, 0), new Color(1,0.75f,0.25f) }, //desert
+            { Tuple.Create(1, 2), new Color(0.25f,0.25f,0.25f) }, //swamp
+            { Tuple.Create(1, 1), new Color(0,0.7f,0) }, //forest
+            { Tuple.Create(1, 0), new Color(0f,0.5f,0) }, //plains
+            { Tuple.Create(0, 2), new Color(0,0.25f,0.25f) }, //taiga
+            { Tuple.Create(0, 1), new Color(0,0.25f,0.25f) }, //taiga
+            { Tuple.Create(0, 0), new Color(0,0,1) }  //tundra
+
+        };
+
         for (int y = 0; y <= worldSize/2; y++){
             for (int x = 0; x <= worldSize; x++){
-                tc = Mathf.FloorToInt(temp.GetPixel(x, y).g * 3)/10;
-                hc = Mathf.FloorToInt(humi.GetPixel(x, y).g * 3)/10;
+                tc = Mathf.FloorToInt(temp.GetPixel(x, y).g * 3);
+                hc = Mathf.FloorToInt(humi.GetPixel(x, y).g * 3);
                 
-
-                bio.SetPixel(x, y, new Color(tc, 0f, hc));
-                bio.SetPixel(worldSize-x, worldSize-y, new Color(tc, 0f, hc));
+            if (miniMap.GetPixel(x,y).g != 0){
+                bio.SetPixel(x, y, biomeDict[Tuple.Create((int)tc, (int)hc)]);
+                bio.SetPixel(worldSize-x, worldSize-y, biomeDict[Tuple.Create((int)tc, (int)hc)]);
+            
+            }else{
+                bio.SetPixel(x, y, Color.black);
+                bio.SetPixel(worldSize-x, worldSize-y, Color.black);
+            
             }
+                }
         }
         bio.Apply();
 
