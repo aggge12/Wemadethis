@@ -30,13 +30,7 @@ public class Pathfinding : MonoBehaviour
             for (int y = bounds.yMin; y < bounds.yMax; y++)
             {
                 Vector3Int cellPos = new Vector3Int(x, y, 0);
-                //TileBase tile = allTiles[(x - bounds.x) + (y - bounds.y) * bounds.size.x];
-
-                //if (tile != null)
-                //{
-                    grid[cellPos] = new Node { Position = cellPos };
-                    //Debug.Log(grid[cellPos]);
-                //}
+                grid[cellPos] = new Node { Position = cellPos };
             }
         }
     }
