@@ -27,6 +27,12 @@ public class Place_Tile : MonoBehaviour
     public Texture2D biome;
     public float biomeRarity = 0.03f;
     public float biomeSize = 0.04f;
+        public Texture2D humidity;
+    public float humidityRarity = 0.0076f;
+    public float humiditySize = 0f;
+    public Texture2D temperature;
+    public float temperatureRarity = 0.0083f;
+    public float temperatureSize = 0f;
     public Texture2D testMap;
     public float testRarity = 0.05f;
     public float testSize = 0.06f;
@@ -37,22 +43,26 @@ public class Place_Tile : MonoBehaviour
         GridLayout gridLayout = transform.parent.GetComponentInParent<GridLayout>();
         Vector3Int cellPosition = gridLayout.WorldToCell(transform.position);
         transform.position = gridLayout.CellToWorld(cellPosition);
-        Tilemap tilemap = GetComponent<Tilemap>(); 
-        tilemap.SetTile((new Vector3Int(0,0,0)), earth_Tile);
 
         seed = Random.Range(-10000, 10000);
 
         miniMap = new Texture2D(worldSize, worldSize);
         foundation = new Texture2D(worldSize, worldSize);
         biome = new Texture2D(worldSize, worldSize);
+        humidity = new Texture2D(worldSize, worldSize);
+        temperature = new Texture2D(worldSize, worldSize);
         testMap = new Texture2D(worldSize, worldSize);
 
         GenerateNoiseTexture(foundationRarity, foundationSize, foundation);
-        GenerateNoiseTexture(biomeRarity, biomeSize, biome);
+        GenerateNoiseTexture(temperatureRarity, temperatureSize, temperature);
+        GenerateNoiseTexture(humidityRarity, humiditySize, humidity);
+        RotateTexture(humidity, humidity);
+        RotateTexture(temperature, temperature);
         GenerateNoiseTexture(testRarity, testSize, testMap);
 
-        MiniMapMaker();
 
+        MiniMapMaker();
+        BiomeMaker(temperature, humidity, biome);
     }
 
     // Update is called once per frame
@@ -152,7 +162,6 @@ public class Place_Tile : MonoBehaviour
                         bestIsland = Vector2.Distance(point2, point1);
                         bestPoint = (point1 + point2)/2;
 /*                         Debug.Log(bestPoint.x); */
-                        
                     }
                 }
             }
@@ -160,11 +169,26 @@ public class Place_Tile : MonoBehaviour
             miniMap.SetPixel(Mathf.RoundToInt(bestPoint.x), Mathf.RoundToInt(bestPoint.y), new Color(1f, 0f, 0f));
             start = origin;
         }
-
-
         miniMap.Apply();
     }
 
+    public void BiomeMaker(Texture2D temp, Texture2D humi, Texture2D bio){
+        float tc = 0f;
+        float hc = 0f;
+        for (int y = 0; y <= worldSize/2; y++){
+            for (int x = 0; x <= worldSize; x++){
+                tc = Mathf.FloorToInt(temp.GetPixel(x, y).g * 3)/10;
+                hc = Mathf.FloorToInt(humi.GetPixel(x, y).g * 3)/10;
+                
+
+                bio.SetPixel(x, y, new Color(tc, 0f, hc));
+                bio.SetPixel(worldSize-x, worldSize-y, new Color(tc, 0f, hc));
+            }
+        }
+        bio.Apply();
+
+        // make bio pixels discrete
+    }
     public void RoadMaker(){
         float radius = Vector2.Distance(spawn, origin);
         float angle = Vector2.Angle(spawn-origin, Vector2.left);
@@ -181,6 +205,30 @@ public class Place_Tile : MonoBehaviour
                 }
         }
 
+    }
+
+    public void RotateTexture(Texture2D texture, Texture2D tarTexture){
+        float p1;
+        float p2;
+        float px;
+        for (int y = 0; y <= worldSize/2; y++)
+        {
+            for (int x = 0; x <= worldSize; x++)
+            {
+                p1 = texture.GetPixel(x, y).g;
+                p2 = texture.GetPixel(worldSize-x, worldSize-y).g;
+                px = (p1+p2)/2;
+                if (px > 0f){
+                    tarTexture.SetPixel(x, y, new Color(0f, px, 0f));
+                    tarTexture.SetPixel(worldSize-x, worldSize-y, new Color(0f, px, 0f));
+                } else {
+                    tarTexture.SetPixel(x, y, new Color(0f, 0f, 0f));
+                    tarTexture.SetPixel(worldSize-x, worldSize-y, new Color(0f, 0f, 0f));
+                }
+            }
+
+        }
+        tarTexture.Apply();
     }
 
     public void HexWorm(Vector2 prvs, Vector2 crnt, float Perlin, bool backTrack){
@@ -217,8 +265,5 @@ public class Place_Tile : MonoBehaviour
         Tilemap tilemap = GetComponent<Tilemap>();
         tilemap.SetTile((new Vector3Int(x-worldSize/2,y-worldSize/2,0)), tileSprite);
         tilemap.SetTile((new Vector3Int(worldSize/2-x,worldSize/2-y,0)), tileSprite);
-        //Debug.Log($"this is x and y: {x}, {y}");
-        tilemap.SetTile((new Vector3Int(1,0,0)), tileSprite);
-
     }
 }
