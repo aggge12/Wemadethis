@@ -8,20 +8,25 @@ public class GameEvents : MonoBehaviour
     private float interval = 0.333f;
     private GameObject[] players;
     private Pathfinding pathfinding;
+    private Place_Tile placeTile;
+
+    public bool Initialized;
 
     private void Start()
     {
         pathfinding = gameObject.AddComponent<Pathfinding>();
+        placeTile = GetComponentInChildren<Place_Tile>();
         players = GameObject.FindGameObjectsWithTag("Player");
         InvokeRepeating("UpdateGameState", 1f, interval);
-        var tilemap = GetComponentInChildren<Tilemap>();
-        Debug.Log(tilemap);
-        pathfinding.InitializeGrid(tilemap);
     }
 
-    // Update is called once per frame
     void Update()
     {
+        if (placeTile.Initialized && !Initialized){
+            Initialized = true;
+            var tilemap = GetComponentInChildren<Tilemap>();
+            pathfinding.InitializeGrid(tilemap);
+        }
     }
 
     public Vector3 TranslateMousePosition(Vector2 newPos)

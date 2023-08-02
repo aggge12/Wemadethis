@@ -28,7 +28,7 @@ public class Place_Tile : MonoBehaviour
     public Texture2D biome;
     public float biomeRarity = 0.03f;
     public float biomeSize = 0.04f;
-        public Texture2D humidity;
+    public Texture2D humidity;
     public float humidityRarity = 0.0076f;
     public float humiditySize = 0f;
     public Texture2D temperature;
@@ -37,6 +37,8 @@ public class Place_Tile : MonoBehaviour
     public Texture2D testMap;
     public float testRarity = 0.05f;
     public float testSize = 0.06f;
+
+    public bool Initialized;
 
 
     void Start()
@@ -64,6 +66,8 @@ public class Place_Tile : MonoBehaviour
 
         MiniMapMaker();
         BiomeMaker(temperature, humidity, biome);
+
+        Initialized = true;
     }
 
     // Update is called once per frame
